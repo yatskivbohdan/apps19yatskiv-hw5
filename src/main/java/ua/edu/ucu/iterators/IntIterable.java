@@ -23,12 +23,10 @@ public class IntIterable implements Iterable<Integer> {
 
             @Override
             public Integer next() {
-                if (hasNext()) {
-                    return values[currentIndex++];
-                } else {
-                    throw new NoSuchElementException();
-                }
+                return values[currentIndex++];
+
             }
+
 
 
         };

@@ -33,11 +33,7 @@ public class FilterIterable implements Iterable<Integer> {
 
             @Override
             public Integer next() {
-                if (hasNext()) {
-                    return nextVal;
-                } else {
-                    throw new NoSuchElementException();
-                }
+                return nextVal;
             }
         };
     }
