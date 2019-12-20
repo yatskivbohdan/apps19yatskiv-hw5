@@ -1,60 +1,45 @@
 package ua.edu.ucu.stream;
 
 import ua.edu.ucu.function.*;
+import ua.edu.ucu.iterators.FilterIterable;
+import ua.edu.ucu.iterators.FlatMapIterable;
+import ua.edu.ucu.iterators.IntIterable;
+import ua.edu.ucu.iterators.MapIterable;
 
 import java.util.ArrayList;
 
 public class AsIntStream implements IntStream {
-    private ArrayList<Integer> values;
-    private boolean closed;
+    private Iterable<Integer> valuesIterable;
 
-    private AsIntStream(int[] values) {
-        closed = false;
-        this.values = new ArrayList<>();
-        for (int el : values) {
-            this.values.add(el);
-        }
+    private AsIntStream(Iterable<Integer> values) {
+        valuesIterable = values;
     }
 
     public static IntStream of(int... values) {
-        return new AsIntStream(values);
+        return new AsIntStream(new IntIterable(values));
     }
 
     private void emptyCheck() {
-        if (values.isEmpty()) {
+        if (count() == 0) {
             throw new IllegalArgumentException();
         }
     }
 
-    private void closedCheck() {
-        if (closed) {
-            throw new RuntimeException("Stream is closed");
-        }
-    }
-
-    private void setClosed() {
-        closed = true;
+    public Iterable<Integer> getIterable(){
+        return valuesIterable;
     }
 
     @Override
     public Double average() {
         emptyCheck();
-        closedCheck();
-        setClosed();
-        int sum = 0;
-        for (int el : values) {
-            sum += el;
-        }
-        return (double) sum / (values.size());
+        return (double) sum() / (count());
     }
 
     @Override
     public Integer max() {
         emptyCheck();
-        closedCheck();
-        setClosed();
         int max = Integer.MIN_VALUE;
-        for (int el : values) {
+        for (int el : valuesIterable) {
             if (el > max) {
                 max = el;
             }
@@ -65,10 +50,8 @@ public class AsIntStream implements IntStream {
     @Override
     public Integer min() {
         emptyCheck();
-        closedCheck();
-        setClosed();
         int min = Integer.MAX_VALUE;
-        for (int el : values) {
+        for (int el : valuesIterable) {
             if (el < min) {
                 min = el;
             }
@@ -78,18 +61,18 @@ public class AsIntStream implements IntStream {
 
     @Override
     public long count() {
-        closedCheck();
-        setClosed();
-        return values.size();
+        long size = 0;
+        for (int el : valuesIterable){
+            size++;
+        }
+        return size;
     }
 
     @Override
     public Integer sum() {
         emptyCheck();
-        closedCheck();
-        setClosed();
         int sum = 0;
-        for (int el : values) {
+        for (int el : valuesIterable) {
             sum += el;
         }
         return sum;
@@ -97,50 +80,30 @@ public class AsIntStream implements IntStream {
 
     @Override
     public IntStream filter(IntPredicate predicate) {
-        for (int i=0; i < values.size(); i++) {
-            if (!predicate.test(values.get(i))) {
-                values.remove(i);
-            }
-        }
-        return this;
+        return new AsIntStream(new FilterIterable(valuesIterable, predicate));
     }
 
     @Override
     public void forEach(IntConsumer action) {
-        closedCheck();
-        setClosed();
-        for (int el : values) {
+        for (int el : valuesIterable) {
             action.accept(el);
         }
     }
 
     @Override
     public IntStream map(IntUnaryOperator mapper) {
-        for (int i = 0; i < values.size(); i++) {
-            values.set(i, mapper.apply(values.get(i)));
-        }
-        return this;
+        return new AsIntStream(new MapIterable(valuesIterable, mapper));
     }
 
     @Override
     public IntStream flatMap(IntToIntStreamFunction func) {
-        ArrayList <Integer> newValues = new ArrayList<>();
-        for (Integer integer : values) {
-            int[] subStreamArray = func.applyAsIntStream(integer).toArray();
-            for (int value : subStreamArray) {
-                newValues.add(value);
-            }
-        }
-        values = newValues;
-        return this;
+        return new AsIntStream(new FlatMapIterable(valuesIterable, func));
     }
 
     @Override
     public int reduce(int identity, IntBinaryOperator op) {
-        closedCheck();
-        setClosed();
         int toReturn = identity;
-        for (Integer el : values){
+        for (Integer el : valuesIterable){
             toReturn = op.apply(toReturn, el);
         }
         return toReturn;
@@ -148,11 +111,11 @@ public class AsIntStream implements IntStream {
 
     @Override
     public int[] toArray() {
-        closedCheck();
-        setClosed();
-        int[] toReturn = new int[values.size()];
-        for (int i = 0; i < values.size(); i++) {
-            toReturn[i] = values.get(i);
+        int[] toReturn = new int[(int) count()];
+        int i = 0;
+        for (int el : valuesIterable) {
+            toReturn[i] = el;
+            i++;
         }
         return toReturn;
     }
