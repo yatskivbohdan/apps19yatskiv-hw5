@@ -5,7 +5,7 @@ import ua.edu.ucu.stream.AsIntStream;
 
 import java.util.Iterator;
 
-public class FlatMapIterable implements Iterable<Integer>{
+public class FlatMapIterable implements Iterable<Integer> {
     private Iterable<Integer> iterable;
     private IntToIntStreamFunction func;
 
@@ -19,20 +19,22 @@ public class FlatMapIterable implements Iterable<Integer>{
         return new Iterator<Integer>() {
             private Iterator<Integer> iterator = iterable.iterator();
             private Iterator<Integer> subIterator;
+
             @Override
             public boolean hasNext() {
-               if (subIterator != null && subIterator.hasNext()){
-                   return true;
-               }
-               while (iterator.hasNext()){
-                   subIterator = ((AsIntStream) func.applyAsIntStream(iterator.next())).getIterable().iterator();
-                   return true;
-               }
-               return false;
+                if (subIterator != null && subIterator.hasNext()) {
+                    return true;
+                }
+                if (iterator.hasNext()) {
+                    // while (iterator.hasNext()){
+                    subIterator = ((AsIntStream) func.applyAsIntStream(iterator.next())).getIterable().iterator();
+                    return true;
+                }
+                return false;
             }
 
             @Override
-            public Integer next () {
+            public Integer next() {
                 return subIterator.next();
             }
         };

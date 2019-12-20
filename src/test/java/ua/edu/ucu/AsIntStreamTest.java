@@ -17,8 +17,8 @@ public class AsIntStreamTest {
     @Before
     public void init() {
         int[] intArr = {-1, 0, 1, 2, 3};
-        int [] empty = {};
-        int [] one = {5};
+        int[] empty = {};
+        int[] one = {5};
         intStream = AsIntStream.of(intArr);
         emptyStream = AsIntStream.of(empty);
         oneValueStream = AsIntStream.of(one);
@@ -34,10 +34,10 @@ public class AsIntStreamTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-        public void testAverageEmpty() {
-            emptyStream.average();
+    public void testAverageEmpty() {
+        emptyStream.average();
 
-        }
+    }
 
     @Test
     public void testMax() {
@@ -94,11 +94,11 @@ public class AsIntStreamTest {
 
     @Test
     public void testToArray() {
-        int [] expectedNorm = {-1, 0, 1, 2, 3};
+        int[] expectedNorm = {-1, 0, 1, 2, 3};
         assertArrayEquals(expectedNorm, intStream.toArray());
-        int [] expectedOne = {5};
+        int[] expectedOne = {5};
         assertArrayEquals(expectedOne, oneValueStream.toArray());
-        int [] expectedEmpty = {};
+        int[] expectedEmpty = {};
         assertArrayEquals(expectedEmpty, emptyStream.toArray());
     }
 

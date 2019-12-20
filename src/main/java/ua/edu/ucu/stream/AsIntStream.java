@@ -7,6 +7,7 @@ import ua.edu.ucu.iterators.IntIterable;
 import ua.edu.ucu.iterators.MapIterable;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class AsIntStream implements IntStream {
     private Iterable<Integer> valuesIterable;
@@ -25,7 +26,7 @@ public class AsIntStream implements IntStream {
         }
     }
 
-    public Iterable<Integer> getIterable(){
+    public Iterable<Integer> getIterable() {
         return valuesIterable;
     }
 
@@ -62,7 +63,7 @@ public class AsIntStream implements IntStream {
     @Override
     public long count() {
         long size = 0;
-        for (int el : valuesIterable){
+        for (Integer integer : valuesIterable) {
             size++;
         }
         return size;
@@ -103,7 +104,7 @@ public class AsIntStream implements IntStream {
     @Override
     public int reduce(int identity, IntBinaryOperator op) {
         int toReturn = identity;
-        for (Integer el : valuesIterable){
+        for (Integer el : valuesIterable) {
             toReturn = op.apply(toReturn, el);
         }
         return toReturn;

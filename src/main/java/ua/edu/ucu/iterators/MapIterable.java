@@ -17,19 +17,21 @@ public class MapIterable implements Iterable<Integer> {
     public Iterator<Integer> iterator() {
         return new Iterator<Integer>() {
             private Iterator<Integer> iterator = iterable.iterator();
+
             @Override
             public boolean hasNext() {
-                while (iterator.hasNext()){
+                if (iterator.hasNext()) {
+                    //       while (iterator.hasNext()){
                     iterator.next();
                     return true;
                 }
                 return false;
             }
 
-                @Override
-                public Integer next () {
-                    return mapper.apply(iterator.next());
-                }
+            @Override
+            public Integer next() {
+                return mapper.apply(iterator.next());
+            }
         };
     }
 }
