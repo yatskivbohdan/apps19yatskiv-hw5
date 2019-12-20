@@ -6,8 +6,6 @@ import ua.edu.ucu.iterators.FlatMapIterable;
 import ua.edu.ucu.iterators.IntIterable;
 import ua.edu.ucu.iterators.MapIterable;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 
 public class AsIntStream implements IntStream {
     private Iterable<Integer> valuesIterable;
@@ -63,7 +61,7 @@ public class AsIntStream implements IntStream {
     @Override
     public long count() {
         long size = 0;
-        for (Integer integer : valuesIterable) {
+        for (int el : valuesIterable) {
             size++;
         }
         return size;
