@@ -25,7 +25,7 @@ public class FlatMapIterable implements Iterable<Integer> {
                 if (subIterator != null && subIterator.hasNext()) {
                     return true;
                 }
-                while (iterator.hasNext()){
+                if (iterator.hasNext()){
                     subIterator = ((AsIntStream) func.applyAsIntStream(iterator.next())).getIterable().iterator();
                     return true;
                 }

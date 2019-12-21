@@ -20,7 +20,7 @@ public class MapIterable implements Iterable<Integer> {
 
             @Override
             public boolean hasNext() {
-                while (iterator.hasNext()){
+                if (iterator.hasNext()){
                     iterator.next();
                     return true;
                 }
